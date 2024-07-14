@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Template.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Template"
+    xmlns:pages="clr-namespace:Template.Pages"
+    FlyoutHeaderBehavior="CollapseOnScroll"
+    Shell.FlyoutBehavior="Flyout">
+
+    <!--<FlyoutItem Title="Cats"
+                Icon="cat.png">
+        <Tab>
+            <ShellContent ContentTemplate="{DataTemplate views:CatsPage}" />
+        </Tab>
+    </FlyoutItem-->
+
+
+    <ShellContent
+        Title="Inicio"
+        ContentTemplate="{DataTemplate pages:HomePage}"
+        Route="Home" />
+
+    <ShellContent
+        Title="Sincronizar"
+        ContentTemplate="{DataTemplate pages:SynchronizationPage}"
+        Route="Synchonize" />
+
+
+    <!--<FlyoutItem Title="Home">
+        <Tab>
+
+        </Tab>
+    </FlyoutItem>-->
+
+    <!--<ShellContent
+        Title="Home"
+        ContentTemplate="{DataTemplate pages:HomePage}"
+        Route="Home" />-->
+
+</Shell>

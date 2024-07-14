@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:BaseContentPage
+    x:Class="Template.Pages.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:extensions="clr-namespace:Template.Extensions"
+    xmlns:pages="clr-namespace:Template.Common.Pages;assembly=Template.Common"
+    xmlns:viewModels="clr-namespace:Template.ViewModels"
+    x:DataType="viewModels:LoginViewModel"
+    x:TypeArguments="viewModels:LoginViewModel"
+    Shell.NavBarIsVisible="false">
+
+    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
+        <StackLayout HeightRequest="200" HorizontalOptions="CenterAndExpand">
+            <Image Source="dotnet_bot" />
+        </StackLayout>
+
+        <StackLayout Margin="0,12,0,0" HeightRequest="32">
+            <ActivityIndicator
+                HeightRequest="32"
+                IsRunning="True"
+                IsVisible="{Binding IsBusy}"
+                WidthRequest="32" />
+        </StackLayout>
+
+        <StackLayout Spacing="0">
+            <Label Text="{extensions:Localize Username}" />
+            <Entry
+                AutomationId="userNameEntry"
+                HorizontalOptions="FillAndExpand"
+                IsEnabled="{Binding IsEnabled}"
+                MaxLength="25"
+                Placeholder="{extensions:Localize Username}"
+                Text="{Binding Username}" />
+        </StackLayout>
+
+        <StackLayout Margin="0,12,0,0" Spacing="0">
+            <Label Text="{extensions:Localize Password}" />
+            <Entry
+                HorizontalOptions="FillAndExpand"
+                IsEnabled="{Binding IsEnabled}"
+                IsPassword="true"
+                MaxLength="50"
+                Placeholder="{extensions:Localize Password}"
+                Text="{Binding Password}" />
+        </StackLayout>
+
+        <Button
+            Margin="0,12,0,0"
+            Command="{Binding LoginWithActiveDirectoryCommand}"
+            Text="{extensions:Localize LoginWithActiveDirectory}" />
+
+    </StackLayout>
+
+</pages:BaseContentPage>

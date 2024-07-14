@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:BaseContentPage
+    x:Class="Template.Pages.SynchronizationPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:extensions="clr-namespace:Template.Extensions"
+    xmlns:models="clr-namespace:Template.Models;assembly=Template.Models"
+    xmlns:pages="clr-namespace:Template.Common.Pages;assembly=Template.Common"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewModels="clr-namespace:Template.ViewModels"
+    x:DataType="viewModels:SynchronizationViewModel"
+    x:TypeArguments="viewModels:SynchronizationViewModel">
+
+    <pages:BaseContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </pages:BaseContentPage.Resources>
+
+    <StackLayout VerticalOptions="FillAndExpand">
+
+        <Image Margin="0,48,0,0" Source="Icon" />
+
+
+        <StackLayout HorizontalOptions="Center" IsVisible="{Binding FinishingSynchronization}">
+            <ActivityIndicator IsRunning="true" Style="{StaticResource ActivityIndicatorStyle}" />
+            <Label
+                HorizontalTextAlignment="Center"
+                Style="{StaticResource SmallLabelStyle}"
+                Text="Finalizando sincronización" />
+
+        </StackLayout>
+
+        <StackLayout HorizontalOptions="Center" IsVisible="{Binding FinishingSynchronization, Converter={StaticResource InvertedBoolConverter}}">
+
+            <ProgressBar
+                Margin="12"
+                HeightRequest="5"
+                Progress="{Binding Progress}"
+                ProgressColor="{StaticResource AccentColor}"
+                WidthRequest="200" />
+
+            <StackLayout HorizontalOptions="Center">
+
+                <CollectionView ItemsSource="{Binding SynchronizationItems}" SelectionMode="None">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:SynchronizationItem">
+
+                            <StackLayout Orientation="Horizontal">
+
+                                <!--<StackLayout Padding="0" IsVisible="{Binding Completed}">
+                                    <Image
+                                        HeightRequest="24"
+                                        IsVisible="{Binding HasError, Converter={StaticResource InvertedBoolConverter}}"
+                                        Source="Check"
+                                        WidthRequest="24" />
+
+                                    <Image
+                                        HeightRequest="24"
+                                        IsVisible="{Binding HasError}"
+                                        Source="Warning"
+                                        WidthRequest="24" />
+                                </StackLayout>-->
+
+                                <ActivityIndicator
+                                    HeightRequest="24"
+                                    IsRunning="True"
+                                    IsVisible="{Binding Completed, Converter={StaticResource InvertedBoolConverter}}"
+                                    WidthRequest="24"
+                                    Color="{StaticResource AccentColor}" />
+
+                                <StackLayout
+                                    Orientation="Vertical"
+                                    Spacing="0"
+                                    VerticalOptions="CenterAndExpand">
+                                    <Label Style="{StaticResource SmallLabelStyle}" Text="{Binding Text}" />
+                                </StackLayout>
+                            </StackLayout>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Label
+                    HorizontalTextAlignment="Center"
+                    Style="{StaticResource SmallLabelStyle}"
+                    Text="{Binding SynchronizationTime}" />
+
+            </StackLayout>
+
+
+
+        </StackLayout>
+
+
+        <!--<StackLayout
+            Margin="12"
+            HorizontalOptions="Center"
+            VerticalOptions="EndAndExpand">
+
+            <Button
+                Command="{Binding GoBackCommand}"
+                IsVisible="{Binding SynchronizationCompleted}"
+                Style="{StaticResource CancelButtonStyle}" />
+
+        </StackLayout>-->
+    </StackLayout>
+
+    <!--<ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25"
+            VerticalOptions="Center">
+
+
+            <Label
+                FontSize="32"
+                HorizontalOptions="Center"
+                SemanticProperties.HeadingLevel="Level1"
+                Text="{extensions:Localize AppTitle}" />
+
+        </VerticalStackLayout>
+    </ScrollView>-->
+
+</pages:BaseContentPage>

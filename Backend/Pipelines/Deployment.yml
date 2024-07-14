@@ -1,0 +1,62 @@
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - Backend/
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: 'OpenAI-QnA-POC-TeamApp-Development'
+  - name: workingDir
+    value: Backend
+  - name: revisionSuffix
+    value: $[format('{0:yyyyMMddHHmm}', pipeline.startTime)]
+  - name: projectFolder
+    value: DocumentSearch.Service
+  
+stages:
+- stage: Build
+
+  jobs:
+  - job: BuildJob
+    steps:
+
+    - task: UseDotNet@2
+      displayName: Use .NET 7.0
+      inputs:
+        packageType: 'sdk'
+        version: '7.0.x'
+        performMultiLevelLookup: true
+     
+    - task: Docker@2
+      displayName: 'Build and Push image'
+      inputs:
+        containerRegistry: 'Azure-Arkno-ACR-Prod'
+        repository: '$(ApiContainerImageName)'
+        command: 'buildAndPush'
+        Dockerfile: '$(workingDir)/$(projectFolder)/Dockerfile'
+        buildContext: '$(workingDir)'
+        tags: '$(ContainerImageTag)'
+
+    - task: AzureCLI@2
+      displayName: Azure CLI
+      inputs:
+        azureSubscription: 'Azure-Arkano-GPT-Prod'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          az extension add --name containerapp --upgrade
+          az containerapp update \
+            --name $(ApiContainerAppName) \
+            --resource-group $(ResourceGroupName) \
+            --image $(ContainerRegistryServer)/$(ApiContainerImageName):$(ContainerImageTag) \
+            --cpu 1.0 \
+            --memory 2.0Gi \
+            --min-replicas 1 \
+            --max-replicas 1 \
+            --revision-suffix r$(revisionSuffix) \
+            --set-env-vars "AppConfiguration=$(ApiAppConfiguration)" "APPINSIGHTS_INSTRUMENTATIONKEY=$(ApiApplicationInsightConnectionString)" "AzureWebJobsSecretStorageKeyVaultUri=$(KeyVaultEndpoint)" "AzureWebJobsSecretStorageType=keyvault"
